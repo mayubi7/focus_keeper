@@ -1,6 +1,7 @@
 
 // document here refers to popup.html file
 // adding event listener to the document waits for popup.html stuff to load
+//
 document.addEventListener('DOMContentLoaded', function () {
 // then in that document we will find the button and when it is clicked we will call function onclick
 document.getElementById('start').onclick = sendStartMessage();}, false);
