@@ -14,4 +14,4 @@ chrome.tabs.onUpdated.addListener( function(tab) {
     if (focusing) {
         chrome.tabs.query({active: true, currentWindow: true},
         function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, window.location.href);});};})
+        chrome.tabs.sendMessage(tabs[0].id, "continue session");});};})
