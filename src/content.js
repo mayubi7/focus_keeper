@@ -1,4 +1,3 @@
-
 var current = window.location.href;
 
 chrome.runtime.onMessage.addListener(function (request) {

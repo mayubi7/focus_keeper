@@ -1,4 +1,3 @@
-
 document.addEventListener('DOMContentLoaded', function() {
     document.querySelector('#focus').addEventListener("click", sendStartMessage, false)}, false);
 
