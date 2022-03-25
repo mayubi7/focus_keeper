@@ -6,7 +6,7 @@ body{
     padding: 0;
     box-sizing: border-box;
 }
-.outer-circle{
+.main-circle{
     width: 230px;
     height: 230px;
     background-color: #cadcff;

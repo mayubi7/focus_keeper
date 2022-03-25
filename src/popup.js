@@ -7,7 +7,7 @@ var displayMins;
 var displaySecs;
 var progressValue;
 
-let progressBar = document.querySelector("#outer-circle");
+let progressBar = document.querySelector(".main-circle");
 
 document.addEventListener("DOMContentLoaded", function() {
     updateTimerDisplay();
@@ -65,7 +65,7 @@ function updateTimerDisplay() {
                 displaySecs = (sessionDuration - secondsPassedFocusing) % 60;
                 if (sessionDuration - secondsPassedFocusing >= 0) {
                     padValuesForDisplay(displayMins, displaySecs);
-                    document.querySelector('#timer').innerHTML = displayMins + ":" + displaySecs;
+                    document.querySelector('.timer').innerHTML = displayMins + ":" + displaySecs;
                     console.log(progressValue);
                     progressBar.style.background = `conic-gradient(
                         #4d5bf9 ${progressValue * 3.6}deg,
@@ -79,11 +79,11 @@ function updateTimerDisplay() {
             clearInterval(timerDisplay);
             chrome.runtime.sendMessage("Timer cleared");
             sessionDuration = sessionDuration / 60;
-            document.querySelector("#timer").innerHTML = sessionDuration + ":00";
+            document.querySelector(".timer").innerHTML = sessionDuration + ":00";
             document.querySelector("#focus").disabled = false;
         } else {
             sessionDuration = sessionDuration / 60;
-            document.querySelector("#timer").innerHTML = sessionDuration + ":00";
+            document.querySelector(".timer").innerHTML = sessionDuration + ":00";
         }
     });
 }
