@@ -2,6 +2,8 @@
 
 Focus Keeper is a Chrome Extension that blocks social media sites while completing a timed focus session.
 
+<img width="273" alt="Screen Shot 2022-03-27 at 7 10 46 PM" src="https://user-images.githubusercontent.com/98232527/160314834-ef916f7f-d425-4874-91e3-7290507860af.png">
+
 ## Phase 1 User Stories
 - As a user, I want to be able to click a start button to start a timer for the focus session
 - As a user, I want to be able to click an end session button to end the focus session
