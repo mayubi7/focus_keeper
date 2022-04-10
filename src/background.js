@@ -1,6 +1,6 @@
 console.log("background running");
 var focusing = false;
-var sessionDuration = 5;
+var sessionDuration = 25;
 var startTime = null;
 
 chrome.runtime.onMessage.addListener(function(text) {

@@ -88,6 +88,68 @@ function updateTimerDisplay() {
     });
 }
 
+const rightBtn = document.querySelector(".navigation-btns .right-btn");
+const leftBtn = document.querySelector(".navigation-btns .left-btn");
+const views = document.querySelectorAll(".card-view .view");
+const viewsContainer = document.querySelector(".card-view .views");
+const dots = document.querySelectorAll(".card-view .dot");
+const rightArrow = document.querySelector(".right .right-arrow");
+const leftArrow = document.querySelector(".left .left-arrow");
+
+let viewPosition = 300;
+let currentView = 1;
+
+rightBtn.addEventListener("click", () => {
+  if (currentView < 2) {
+    viewPosition += views[0].offsetWidth;
+    viewsContainer.style.transform = `translateX(-${viewPosition}px`;
+    currentView++;
+
+    dots.forEach((dot) =>{
+    	dot.classList.remove("active");
+    });
+
+    dots[currentView].classList.add("active");
+  }
+
+  if (currentView === 2) {
+  	rightBtn.disabled = true;
+    rightArrow.style.visibility = `hidden`;
+  }
+
+  if (currentView > 0) {
+    leftBtn.disabled = false;
+    leftArrow.style.visibility = `visible`;
+  }
+});
+
+leftBtn.addEventListener("click", () => {
+ if (currentView > 0) {
+    viewPosition -= views[0].offsetWidth;
+    viewsContainer.style.transform = `translateX(-${viewPosition}px)`;
+    currentView--;
+
+    dots.forEach((dot) =>{
+    	dot.classList.remove("active");
+    });
+
+    dots[currentView].classList.add("active");
+  }
+
+  if (currentView === 0) {
+  	leftBtn.disabled = true;
+    leftArrow.style.visibility = `hidden`;
+  }
+
+  if (currentView < 2) {
+    rightBtn.disabled = false;
+    rightArrow.style.visibility = `visible`;
+  }
+});
+
+
+
+
 
 
 
