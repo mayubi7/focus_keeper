@@ -12,8 +12,8 @@ chrome.runtime.onMessage.addListener(function(text) {
         focusing = false;
         console.log(text);
         endSession();
-    } else {
-        console.log(text);
+    } else if (text === "focusing"){
+        focusing = true;
     }
 });
 
