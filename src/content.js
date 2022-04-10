@@ -1,6 +1,5 @@
 var current = window.location.href;
 
-
 chrome.runtime.onMessage.addListener(function (request) {
     if (request === "end session") {
         window.location.reload(false);
