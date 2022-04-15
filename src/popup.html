@@ -5,50 +5,76 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div class="card-view">
-        <div class="dots">
-            <div class="dot"></div>
-            <div class="dot active"></div>
-            <div class="dot"></div>
-        </div>
-        <div class="views">
-            <div class="view">
-                <div class="hourly-view">
-                    <p>This view would include a calender like view on this page.</p>
+<div class="card-view">
+    <div class="dots">
+        <div class="dot"></div>
+        <div class="dot active"></div>
+        <div class="dot"></div>
+    </div>
+    <div class="views">
+        <div class="view">
+            <div class="hourly-view">
+                <p>This view would include a calender like view on this page.</p>
+                <div class="flex-container">
+                    <div class="hour 0">12:00AM</div>
+                    <div class="hour 1">1:00AM</div>
+                    <div class="hour 2">2:00AM</div>
+                    <div class="hour 3">3:00AM</div>
+                    <div class="hour 4">4:00AM</div>
+                    <div class="hour 5">5:00AM</div>
+                    <div class="hour 6">6:00AM</div>
+                    <div class="hour 7">7:00AM</div>
+                    <div class="hour 8">8:00AM</div>
+                    <div class="hour 9">9:00AM</div>
+                    <div class="hour 10">10:00AM</div>
+                    <div class="hour 11">11:00AM</div>
+                    <div class="hour 12">12:00PM</div>
+                    <div class="hour 13">1:00PM</div>
+                    <div class="hour 14">2:00PM</div>
+                    <div class="hour 15">3:00PM</div>
+                    <div class="hour 16">4:00PM</div>
+                    <div class="hour 17">5:00PM</div>
+                    <div class="hour 18">6:00PM</div>
+                    <div class="hour 19">7:00PM</div>
+                    <div class="hour 20">8:00PM</div>
+                    <div class="hour 21">9:00PM</div>
+                    <div class="hour 22">10:00PM</div>
+                    <div class="hour 23">11:00PM</div>
                 </div>
             </div>
-            <div class="view">
-                <div class="timer-view">
-                    <div class="progress-display">
-                        <div class="main-circle">
-                            <div class="inner-circle">
-                                <p class="timer"></p>
-                            </div>
+        </div>
+        <div class="view">
+            <div class="timer-view">
+                <div class="progress-display">
+                    <div class="main-circle">
+                        <div class="inner-circle">
+                            <p class="timer"></p>
                         </div>
                     </div>
-                    <div class="btn-container">
-                        <button class="button" id="focus">Focus</button>
-                        <button class="button" id="end">End Session</button>
-                    </div>
                 </div>
-            </div>
-            <div class="view">
-                <div class="weekly-view">
-                    <p>This view would include a weekly overview with some stats.</p>
+                <div class="btn-container">
+                    <button class="button" id="focus">Focus</button>
+                    <button class="button" id="end">End Session</button>
                 </div>
             </div>
         </div>
-        <div class="navigation-btns">
-            <div class="left">
-                <div class="left-arrow"></div>
-                <button class="left-btn"></button>
-            </div>
-            <div class="right">
-                <div class="right-arrow"></div>
-                <button class="right-btn"></button>
+        <div class="view">
+            <div class="weekly-view">
+                <p>This view would include a weekly overview with some stats.</p>
             </div>
         </div>
     </div>
-    <script src="popup.js" type="text/javascript" defer></script>
+    <div class="navigation-btns">
+        <div class="left">
+            <div class="left-arrow"></div>
+            <button class="left-btn"></button>
+        </div>
+        <div class="right">
+            <div class="right-arrow"></div>
+            <button class="right-btn"></button>
+        </div>
+    </div>
+</div>
+<script src="popup.js" type="text/javascript" defer></script>
 </body>
 </html>

@@ -25,7 +25,6 @@ body {
   width: 300%;
   transition: all 400ms ease;
   transform: translateX(-300px);
-
 }
 
 .card-view .dots {
@@ -189,12 +188,29 @@ body {
   position: relative;
 }
 
-.view .hourly-view {
+.view .weekly-view *,
+.view .hourly-view * {
   padding: 10px;
+  background-color: #f2f7ff;
+	display: border-box;
+	width: 300px;
 }
 
-.view .weekly-view {
-  padding: 10px;
+.hourly-view .flex-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 300px;
+	height: 300px;
+	overflow: scroll;
+}
+
+.hourly-view .hour {
+	background-color: #cadcff;
+	width: 300px;
+	margin: 0px;
+	flex: 0 0 60px;
+	border-top: solid 3px grey;
 }
 
 
