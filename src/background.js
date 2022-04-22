@@ -1,7 +1,10 @@
 console.log("background running");
-var focusing = false;
-var sessionDuration = 25;
-var startTime = null;
+let focusing = false;
+let sessionDuration = 1;
+let startTime = null;
+let paused = false;
+let secondsPassedFocusing = 0;
+let secondsRemaining = null;
 
 chrome.runtime.onMessage.addListener(function(text) {
     if (text === "started session") {
@@ -12,16 +15,26 @@ chrome.runtime.onMessage.addListener(function(text) {
         focusing = false;
         console.log(text);
         endSession();
-    } else if (text === "focusing"){
+    } else if (text === "focusing") {
         focusing = true;
+    } else if (text === "pause session") {
+        focusing = false;
+        paused = true;
+        console.log(text);
+        pauseSession();
+    } else {
+        console.log(text);
     }
 });
 
 chrome.alarms.onAlarm.addListener(function (alarm) {
     console.log("Got an alarm", alarm);
-    focusing = false;
     chrome.storage.sync.set({
-        isFocusing: focusing,
+        isFocusing: false,
+        startTime: null,
+        endTime: null,
+        isPaused: false,
+        secsFocused: 0,
     });
     chrome.tabs.query({}, function (tabs) {
         tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, "focus completed"));
@@ -38,14 +51,30 @@ chrome.tabs.onUpdated.addListener(function(tab) {
 
 function scheduleSession() {
     startTime = (new Date()).getTime();
-    chrome.alarms.create("pomodoro",{delayInMinutes: sessionDuration});
-    console.log("Alarm created!");
-    console.log(new Date());
-    chrome.storage.sync.set({
-        sessionDuration: sessionDuration,
-        startTime: startTime,
-        isFocusing: focusing,
-    });
+    endTime = startTime + (1000 * 60 * sessionDuration);
+    if (!paused) {
+        chrome.alarms.create("pomodoro",{delayInMinutes: sessionDuration});
+        console.log("Alarm created!");
+        chrome.storage.sync.set({
+            sessionDuration: sessionDuration,
+            startTime: startTime,
+            endTime: endTime,
+            isFocusing: focusing,
+            isPaused: false,
+            secsFocused: 0,
+        });
+    } else {
+        chrome.storage.sync.get(['secsFocused'], function (session) {
+            secondsPassedFocusing = session.secsFocused;
+            secondsRemaining = 60 * sessionDuration - secondsPassedFocusing;
+            endTime = (new Date()).getTime() + (1000 * secondsRemaining);
+            chrome.storage.sync.set({
+                endTime: endTime,
+                isFocusing: true,
+                isPaused: false,
+            })
+        });
+    }
 }
 
 function endSession() {
@@ -53,9 +82,23 @@ function endSession() {
     chrome.storage.sync.set({
         sessionDuration: sessionDuration,
         startTime: null,
+        endTime: null,
         isFocusing: false,
+        isPaused: false,
+        secsFocused: 0,
     });
+    console.log("Alarm cleared.");
     console.log("Session Ended. Storage updated.");
+}
+
+function pauseSession() {
+    chrome.alarms.clearAll();
+    chrome.storage.sync.set({
+            sessionDuration: sessionDuration,
+            startTime: startTime,
+            isFocusing: true,
+        });
+    console.log("Alarm cleared.");
 }
 
 

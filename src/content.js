@@ -1,9 +1,7 @@
 var current = window.location.href;
 
 chrome.runtime.onMessage.addListener(function (request) {
-    if (request === "end session") {
-        window.location.reload(false);
-    } else if (request === "focus completed") {
+    if (request === "end session" || request === "focus completed" || request === "pause session") {
         window.location.reload(false);
     } else if (toBlock()) {
         document.documentElement.innerHTML = '';
