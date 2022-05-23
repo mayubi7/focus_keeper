@@ -171,7 +171,7 @@ body {
   border-radius: 25px;
   color: #150e49;
   text-align: center;
-  font: bold Verdana, Geneva, sans-serif;
+  font: sans-serif;
   border: 0px;
   box-shadow: 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
     -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
@@ -195,27 +195,40 @@ body {
 
 .view .weekly-view *,
 .view .hourly-view * {
-  padding: 10px;
   background-color: #f2f7ff;
 	display: border-box;
 	width: 300px;
 }
 
-.hourly-view .flex-container {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
+.hourly-view .hour-container {
 	width: 300px;
 	height: 300px;
 	overflow: scroll;
 }
 
 .hourly-view .hour {
-	background-color: #cadcff;
+	background-color: #f2f7ff;
 	width: 300px;
+	height: 60px;
 	margin: 0px;
-	flex: 0 0 60px;
-	border-top: solid 3px grey;
+	border-top: solid 2px #dfe3eb;
+	padding: 5px;
+	color: #5d6066;
+	font-family: Helvetica, sans-serif;
+	font-size: 12px;
 }
 
+.hourly-view .session {
+    background: #cadcff;
+    width: 230px;
+    left: 58px;
+    top: -20px;
+    position: relative;
+    border-radius: 8px;
+    font: bold Verdana, Geneva, sans-serif;
+    color: #150e49;
+    margin: 0px;
+    box-shadow:6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+               -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+}
 

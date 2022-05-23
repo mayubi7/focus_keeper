@@ -9,6 +9,7 @@ const viewsContainer = document.querySelector(".card-view .views");
 const dots = document.querySelectorAll(".card-view .dot");
 const rightArrow = document.querySelector(".right .right-arrow");
 const leftArrow = document.querySelector(".left .left-arrow");
+const hours = document.querySelectorAll(".hour-container .hour");
 let progressBar = document.querySelector(".main-circle");
 
 let timerDisplay;
@@ -23,75 +24,163 @@ let progressValue;
 let secondsPassedFocusing = 0;
 let viewPosition = 300;
 let currentView = 1;
+let minsFocused = 0;
+let currentSession;
 
 document.addEventListener("DOMContentLoaded", function() {
     updateTimerDisplay();
 });
 
 focusBtn.addEventListener("click", sendStartMessage, false);
-endBtn.addEventListener("click", sendEndMessage, false);
-pauseBtn.addEventListener("click", sendPauseMessage, false);
+endBtn.addEventListener("click", endSession, false);
+pauseBtn.addEventListener("click", pauseSession, false);
 rightBtn.addEventListener("click", shiftRight, false);
 leftBtn.addEventListener("click", shiftLeft, false);
 
 chrome.storage.onChanged.addListener(updateTimerDisplay);
 
 function sendStartMessage() {
-    chrome.tabs.query({}, function (tabs) {
-        tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, "started session"));
+    chrome.tabs.query({url: "https://*/*"}, function(tabs) {
+        tabs.forEach(function(tab) {
+        chrome.tabs.sendMessage(tab.id, "started session");
         chrome.runtime.sendMessage("started session");
     });
-    displayPauseBtn();
+});
+}
+
+function endSession() {
+    addSessionToHourlyView();
+    saveSessionToStorage();
+    sendEndMessage();
+}
+
+//TODO: Refactor
+function addSessionToHourlyView() {
+    chrome.storage.sync.get(['currentSession'], function (data) {
+        currentSession = data.currentSession;
+        startTime = new Date(currentSession.startTime);
+        endTime = new Date(currentSession.endTime);
+        currentTime = new Date();
+        if (endTime.getTime() > currentTime.getTime()) {
+            endTime = currentTime;
+        }
+        getSessionFocusMins();
+        console.log("Started Session at : " + startTime);
+        console.log("Ended Session at: " + endTime);
+        console.log("Focus Minutes: " + minsFocused);
+        let defaultTop = -20 + startTime.getMinutes();
+
+        let sessionDiv = document.createElement("div");
+        sessionDiv.classList.add("session");
+        sessionDiv.style.top = `${defaultTop}px`;
+        sessionDiv.style.height = `${minsFocused}px`;
+        hours[startTime.getHours()].appendChild(sessionDiv);
+        });
+}
+
+function getSessionFocusMins() {
+    minsFocused = Math.floor(((endTime.getTime() - startTime.getTime()) / 1000) / 60);
+}
+//TODO: update this function
+function saveSessionToStorage() {
+    chrome.storage.sync.get(['sessionsCompletedToday'], function (data) {
+        sessionsToday = data.sessionsCompletedToday;
+        sessionsToday.push(currentSession);
+    })
 }
 
 function sendEndMessage() {
-    chrome.tabs.query({}, function (tabs) {
-        tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, "end session"));
+    chrome.tabs.query({url: "https://*/*"}, function(tabs) {
+        tabs.forEach(function(tab) {
+        chrome.tabs.sendMessage(tab.id, "end session");
         chrome.runtime.sendMessage("end session");
     });
-    displayFocusBtn();
+});
+}
+
+function pauseSession() {
+    sendPauseMessage();
+    updateStorageToPause();
 }
 
 function sendPauseMessage() {
-    chrome.tabs.query({}, function (tabs) {
-        tabs.forEach(tab => chrome.tabs.sendMessage(tab.id, "pause session"));
+    chrome.tabs.query({url: "https://*/*"}, function(tabs) {
+        tabs.forEach(function(tab) {
+        chrome.tabs.sendMessage(tab.id, "pause session");
         chrome.runtime.sendMessage("pause session");
     });
-    paused = true;
-    displayFocusBtn();
-    chrome.storage.sync.set({
-        isPaused: true,
-        secsFocused: secondsPassedFocusing,
-    });
-    chrome.runtime.sendMessage("SecondPassed Setting:" + secondsPassedFocusing);
+});
 }
+
+function updateStorageToPause() {
+    currentSession.isFocusing = true;
+    currentSession.isPaused = true;
+    currentSession.secsFocused = secondsPassedFocusing;
+    console.log("Seconds Passed Focusing before PAUSE:" + secondsPassedFocusing);
+    chrome.storage.sync.set({"currentSession": currentSession});
+}
+
 function updateTimerDisplay() {
-    chrome.storage.sync.get(['isFocusing', 'sessionDuration', 'startTime', 'isPaused', 'secsFocused','endTime'],
-    function (session) {
-        focusing = session.isFocusing;
-        sessionDuration = session.sessionDuration * 60;
-        startTime = session.startTime;
-        endTime = session.endTime;
-        paused = session.isPaused;
-        secondsPassedFocusing = session.secsFocused;
-        if (focusing && !paused) {
-            chrome.runtime.sendMessage("focusing");
-            displayPauseBtn();
-            updateTime();
-        } else if (!focusing && timerDisplay !== undefined){
-            clearInterval(timerDisplay);
-            defaultDisplay();
-        } else if (focusing && paused) {
-            clearInterval(timerDisplay);
-            displayRemainingTime();
+    chrome.storage.sync.get(['currentSession'],
+    function (data) {
+        currentSession = data.currentSession;
+        setSessionProperties();
+        if (currentlyFocusing()) {
+            displayForFocus();
+        } else if (abandoningSession()){
+            displayForEndingEarly();
+        } else if (currentlyPaused()) {
+            console.log("----> CURRENTLY PAUSING SESSION");
+            displayForPause();
         } else {
             defaultDisplay();
         }
     });
 }
 
+function setSessionProperties() {
+    focusing = currentSession.isFocusing;
+    sessionDuration = currentSession.sessionDuration * 60;
+    startTime = currentSession.startTime;
+    endTime = currentSession.endTime;
+    paused = currentSession.isPaused;
+    secondsPassedFocusing = currentSession.secsFocused;
+}
+
+function currentlyFocusing() {
+    return focusing === true && paused === false;
+}
+
+function abandoningSession() {
+    return focusing === false && timerDisplay !== undefined;
+}
+
+function currentlyPaused() {
+    return focusing === true && paused === true;
+}
+
+function displayForFocus() {
+    console.log("Clearing before starting another: " + timerDisplay);
+    clearInterval(timerDisplay);
+    displayPauseBtn();
+    updateTime();
+}
+
+function displayForEndingEarly() {
+    clearInterval(timerDisplay);
+    defaultDisplay();
+}
+
+function displayForPause() {
+    console.log("CLEARING TIMER:" + timerDisplay);
+    clearInterval(timerDisplay);
+    displayRemainingTime();
+}
+
 function updateTime() {
+    console.log("Timer Display Value: " + timerDisplay);
     timerDisplay = setInterval(function () {
+        console.log(timerDisplay);
         secsRemaining = Math.round((endTime - (new Date()).getTime()) / 1000);
         secondsPassedFocusing = sessionDuration - secsRemaining;
         progressValue = secondsPassedFocusing / sessionDuration * 100;
@@ -112,7 +201,7 @@ function updateTime() {
                  #cadcff ${360}deg
             )`;
             defaultDisplay();
-            sendEndMessage();
+            endSession();
         }
     }, 1000);
 }
@@ -142,6 +231,7 @@ function displayRemainingTime() {
         #4d5bf9 ${progressValue * 3.6}deg,
         #cadcff ${progressValue * 3.6}deg
     )`;
+    displayFocusBtn();
 }
 
 function defaultDisplay() {
