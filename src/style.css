@@ -195,14 +195,16 @@ body {
 
 .view .weekly-view *,
 .view .hourly-view * {
-  background-color: #f2f7ff;
+    background-color: #f2f7ff;
 	display: border-box;
 	width: 300px;
 }
 
 .hourly-view .hour-container {
+    position: absolute;
+    top: 35px;
 	width: 300px;
-	height: 300px;
+	height: 330px;
 	overflow: scroll;
 }
 
@@ -216,19 +218,63 @@ body {
 	color: #5d6066;
 	font-family: Helvetica, sans-serif;
 	font-size: 12px;
+	position: relative;
 }
 
 .hourly-view .session {
     background: #cadcff;
     width: 230px;
-    left: 58px;
+    left: 62px;
     top: -20px;
-    position: relative;
-    border-radius: 8px;
+    position: absolute;
+    border-radius: 5px;
     font: bold Verdana, Geneva, sans-serif;
     color: #150e49;
     margin: 0px;
-    box-shadow:6px 6px 10px -1px rgba(0, 0, 0, 0.15),
-               -6px -6px 10px -1px rgba(255, 255, 255, 0.7);
+    box-shadow:3px 3px 8px -1px rgba(0, 0, 0, 0.15),
+               -3px -3px 8px -1px rgba(255, 255, 255, 0.7);
+    z-index: 1;
 }
 
+.hourly-view .date,
+.weekly-view .week {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+    padding-top: 5px;
+}
+
+.weekly-view .chart-container {
+    width: 300px;
+    margin: 10px 0;
+    position: absolute;
+    top: 20px;
+}
+
+.chart-container p{
+    margin: 0 0 10px;
+    padding-left: 2px;
+}
+
+.chart-container p:nth-of-type(2n) {
+    position: relative;
+    width: 60px;
+    float: right;
+    top: -24px;
+    text-align: right;
+    padding-right: 5px;
+}
+
+.chart-container .day {
+    background: #cadcff;
+    margin: -8px 0 15px;
+    padding: 0px;
+    border-radius: 5px;
+}
+
+.chart-container .day-data {
+    background: #4d5bf9;
+    height: 12px;
+    border-radius: 5px;
+    width: 0%;
+}
